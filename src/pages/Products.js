@@ -17,6 +17,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 
 import AppLoginBar from '../components/AppLoginBar';
+import Loading from '../components/Loading';
 
 export class Products extends Component {
 
@@ -24,24 +25,33 @@ export class Products extends Component {
     super(props);
     this.state = {
       products: [],
-      isLoading: true,
+      isLoading: false,
     }
   }
 
   getProducts() {
-    let token = sessionStorage.getItem('token');
     const self = this;
-    api.get('products', { headers: { Authorization: token } })
-      .then(res => {
 
-        this.setState({
-          products: res.data,
-          isLoading: false,
-        });
+    this.setState({
+      isLoading: true,
+    });
 
-      }).catch(function (error) {
-        self.props.history.push('/');
-      })
+    api.get('products')
+    .then(res => {
+
+      this.setState({
+        products: res.data,
+        isLoading: false,
+      });
+
+    }).catch(function (error) {
+
+      this.setState({
+        isLoading: false,
+      });
+
+      self.props.history.push('/');
+    });
   }
 
   componentDidMount() {
@@ -73,6 +83,8 @@ export class Products extends Component {
         minWidth: 700,
       },
     });
+
+    let loadingHtml = (this.state.isLoading) ? <Loading/>: '';
 
     return (
       <div>
@@ -134,6 +146,8 @@ export class Products extends Component {
             </TableContainer>
           </Grid>
         </Grid>
+
+        { loadingHtml }
 
       </div>
     )
