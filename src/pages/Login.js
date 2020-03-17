@@ -15,8 +15,10 @@ export class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
-            password: '',
+            form: {
+                user: '',
+                password: '',
+            },
             showToast: false,
             toastSeverity: "",
             toastTitle: "",
@@ -27,13 +29,13 @@ export class Login extends Component {
 
     handleChange(event) {
         event.preventDefault();
-        let form = this.state;
+        let formLogin = this.state.form;
         let name = event.target.name;
         let value = event.target.value;
 
-        form[name] = value;
+        formLogin[name] = value;
 
-        this.setState(form);
+        this.setState({form: formLogin});
     }
 
     onFormSubmit = e => {
@@ -42,7 +44,7 @@ export class Login extends Component {
     }
 
     submitForm() {
-        const params = new URLSearchParams(this.state);
+        const params = new URLSearchParams(this.state.form);
         this.setState({
             isLoading: true, 
         });
@@ -97,7 +99,7 @@ export class Login extends Component {
                                 name="user"
                                 autoComplete="user"
                                 autoFocus
-                                value={this.state.user} onChange={this.handleChange.bind(this)}/>
+                                value={this.state.form.user} onChange={this.handleChange.bind(this)}/>
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -108,7 +110,7 @@ export class Login extends Component {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                value={this.state.password} onChange={this.handleChange.bind(this)}/>
+                                value={this.state.form.password} onChange={this.handleChange.bind(this)}/>
                             <Button
                                 type="submit"
                                 fullWidth

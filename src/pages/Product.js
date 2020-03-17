@@ -26,6 +26,7 @@ export class Product extends Component {
     super(props);
     this.state = {
       product: {},
+      productDeactivation: [],
       isLoading: false,
       isShowModal: false,
       reason: '',
@@ -54,12 +55,14 @@ export class Product extends Component {
         reason: '',
       });
 
-      // const params = new URLSearchParams(this.state);
-      // api.post('product/deactivate', params)
-      // .then(res => {
-      //     console.log('Login');
-      //     console.log(res.data);
-      // });
+      const params = new URLSearchParams();
+      params.append('code', this.state.product.code);
+      params.append('reason', this.state.reason);
+      api.post('product/deactivate', params)
+      .then(res => {
+          this.getProduct(this.state.product.code);
+          this.getProductDeactivation(this.state.product.code);
+      });
     }    
   }
 
@@ -95,14 +98,42 @@ export class Product extends Component {
       });
   }
 
+  getProductDeactivation(id) {
+    const self = this;
+
+    this.setState({
+      isLoading: true,
+    });
+
+    api.get('productdeactivation/' + id)
+      .then(res => {
+
+        this.setState({
+          productDeactivation: res.data,
+          isLoading: false,
+        });
+
+      }).catch(function (error) {
+
+        self.setState({
+          isLoading: false,
+        });
+
+        self.props.history.push('/');
+      });
+  }
+
   componentDidMount() {
     const id = this.props.match.params.id;
     this.getProduct(id);
+    this.getProductDeactivation(id);
   }
 
   render() {
 
     let product = this.state.product;
+    let productDeactivation = this.state.productDeactivation;
+
     let html;
     let deactivateButton;
 
@@ -310,6 +341,43 @@ export class Product extends Component {
                   :
                   <StyledTableRow>
                     <StyledTableCell>No price reductions</StyledTableCell>
+                  </StyledTableRow>
+              }
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {/* Listado de desactivaciones del producto */}
+        <Typography component="h1" variant="h5" className="wrapper-title">
+          Deactivation of product
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>User</StyledTableCell>
+                <StyledTableCell>Date</StyledTableCell>
+                <StyledTableCell>Reason</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+
+              {
+                productDeactivation.length ?
+                productDeactivation.map(pD => (
+                    <StyledTableRow stripedrows="true" hover key={pD.id}>
+                      <StyledTableCell>{pD.user.name}</StyledTableCell>
+                      <StyledTableCell>
+                        <Moment format="DD/MM/YYYY">
+                          {pD.date}
+                        </Moment>
+                      </StyledTableCell>
+                      <StyledTableCell>{pD.reason}</StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                  :
+                  <StyledTableRow>
+                    <StyledTableCell>No deactivations of product</StyledTableCell>
                   </StyledTableRow>
               }
             </TableBody>

@@ -46,7 +46,7 @@ export class Products extends Component {
 
     }).catch(function (error) {
 
-      this.setState({
+      self.setState({
         isLoading: false,
       });
 
