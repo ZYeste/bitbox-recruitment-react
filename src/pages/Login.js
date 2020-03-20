@@ -53,7 +53,7 @@ export class Login extends Component {
             let token = res.data;
 
             sessionStorage.setItem('token', token);
-            sessionStorage.setItem('user', this.state.user);
+            sessionStorage.setItem('user', this.state.form.user);
             
             this.setState({
                 isLoading: false, 
@@ -65,10 +65,18 @@ export class Login extends Component {
             console.log('submitForm() error');
             console.log(error.response);
             
+            let errorTxt;
+
+            if(error.response === undefined){
+                errorTxt = 'The server is inaccessible';
+            } else {
+                errorTxt = error.response.data;
+            }
+
             this.setState({
                 showToast: true, 
                 toastSeverity: Toast.TYPE_ERROR, 
-                toastDescription: error.response.data,
+                toastDescription: errorTxt,
                 isLoading: false, 
             });
           });

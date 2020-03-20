@@ -15,6 +15,8 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 import AppLoginBar from '../components/AppLoginBar';
 import Loading from '../components/Loading';
@@ -27,6 +29,10 @@ export class Products extends Component {
       products: [],
       isLoading: false,
     }
+  }
+
+  addProduct(){
+    this.props.history.push('/products/add');
   }
 
   getProducts() {
@@ -112,6 +118,15 @@ export class Products extends Component {
               <Typography component="h1" variant="h5" className="wrapper-title">
                 Products
               </Typography>
+            </Grid>
+
+            <Grid
+              container
+              justify="flex-end"
+              alignItems="flex-end">
+              <IconButton aria-label="back" size="small" onClick={this.addProduct.bind(this)}>
+                <AddCircleIcon fontSize="inherit"/>
+              </IconButton>
             </Grid>
 
             <TableContainer component={Paper}>

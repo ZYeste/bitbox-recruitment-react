@@ -16,6 +16,8 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import AppLoginBar from '../components/AppLoginBar';
 import Loading from '../components/Loading';
@@ -43,6 +45,10 @@ export class Product extends Component {
     this.setState({
       isShowModal: true
     });
+  }
+
+  back(){
+    this.props.history.push('/products');
   }
 
   deactivate() {
@@ -404,14 +410,25 @@ export class Product extends Component {
             justify="center"
             alignItems="center"
             item xs={8}>
+
+            <Grid
+              container
+              justify="flex-start"
+              alignItems="flex-start">
+              <IconButton aria-label="back" size="small" onClick={this.back.bind(this)}>
+                <ArrowBackIcon fontSize="inherit"/>
+              </IconButton>
+            </Grid>
+
             <Grid
               container
               direction="row"
               justify="center"
               alignItems="center">
+
               <Typography component="h1" variant="h5" className="wrapper-title">
                 Product details
-              </Typography>
+              </Typography>              
             </Grid>
             {html}
           </Grid>
